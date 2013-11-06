@@ -52,7 +52,7 @@ public class SetupScoreboards extends JavaPlugin implements Listener {
 
     private Location pad1 = new Location(world, 5, 5, 5);
 
-    private String prefix = "ChatColor.WHITE + "[" + ChatColor.GREEN + "ManHunt" + ChatColor.WHITE "]";
+    private String prefix = ChatColor.WHITE + "[" + ChatColor.GREEN + "ManHunt" + ChatColor.WHITE + "]";
 
 
     public void onEnable() {
@@ -98,15 +98,19 @@ public class SetupScoreboards extends JavaPlugin implements Listener {
                 score1.setScore(HuntersInt);
                 score2.setScore(SurvivorsInt);
                 score3.setScore(SpectatorsInt);
-                if (time == 0) {
-                    onTimerFin();
-                    cancel();
-                    runNewTask();
-                } else {
-                    onMin();
+                if(state == gameState.GameState.Lobby) {
+                    Lobby();
                 }
-                time--;
-            }
+                if(state == gameState.GameState.Pregame) {
+                    PreGame();
+                }
+                if(state == gameState.GameState.ingame) {
+                    ingame();
+                }
+                if(state == gameState.GameState.endgame) {
+                    endGame();
+                }
+          }
         }.runTaskTimerAsynchronously(this, 20L, 20L);
     }
 
@@ -143,7 +147,7 @@ public class SetupScoreboards extends JavaPlugin implements Listener {
     public void ingame() {
         showPreScore("time");
         time--;
-        if(pregameTime == 0) {
+        if(time == 0) {
             state = gameState.GameState.endgame;
             endGame();
         }
@@ -152,13 +156,24 @@ public class SetupScoreboards extends JavaPlugin implements Listener {
     public void endGame() {
         showPreScore("endTime");
         endTime--;
+        gameEnd();
+        if(SurvivorsInt > HuntersInt)  {
+            Bukkit.broadcastMessage(prefix + ChatColor.GREEN + "The Survivors have won the game!");
+        }
+        if(HuntersInt > SurvivorsInt) {
+            Bukkit.broadcastMessage(prefix + ChatColor.RED + "The Hunters have won the game!");
+        }
         if(endTime == 0) {
             for(Player player : Bukkit.getOnlinePlayers()) {
                 player.kickPlayer(ChatColor.AQUA + "Game Over! \nServer restarting!");
             }
         }
     }
-
+         public void gameEnd() {
+             for(Player player : Bukkit.getOnlinePlayers()) {
+                 player.setGameMode(GameMode.CREATIVE);
+             }
+         }
 
 
 
@@ -218,24 +233,16 @@ public class SetupScoreboards extends JavaPlugin implements Listener {
         if (time > 60) {
 
             if (time % 60 == 0) {
-                Bukkit.broadcastMessage(ChatColor.GOLD + "[" + ChatColor.AQUA
-                        + "Vertigo" + ChatColor.GOLD + "] "
-                        + ChatColor.DARK_AQUA + "" + mins
-                        + " Minutes Remaining!");
+                Bukkit.broadcastMessage(prefix + "" + mins + ChatColor.AQUA + " minutes remaining!");
             }
         } else if (time == 60) {
-            Bukkit.broadcastMessage(ChatColor.GOLD + "[" + ChatColor.AQUA
-                    + "Vertigo" + ChatColor.GOLD + "] " + ChatColor.DARK_AQUA
-                    + "" + mins + " Minute Remain!");
+            Bukkit.broadcastMessage(prefix + ChatColor.RED + "1" + ChatColor.AQUA + " minute remaining!");
         }
 
         else if (time <= 10) {
-            Bukkit.broadcastMessage(ChatColor.GOLD + "[" + ChatColor.AQUA
-                    + "Vertigo" + ChatColor.GOLD + "] " + ChatColor.DARK_AQUA
-                    + "" + time + " Seconds Remaining!");
+            Bukkit.broadcastMessage(prefix + "" + ChatColor.RED + "" + time + " Seconds Remaining!");
         } else if (time == 1) {
-            Bukkit.broadcastMessage(ChatColor.GOLD + "[" + ChatColor.AQUA
-                    + "Vertigo" + ChatColor.GOLD + "] " + ChatColor.DARK_AQUA
+            Bukkit.broadcastMessage(prefix + ChatColor.RED
                     + "" + time + " Second Remain!");
         }
     }
