@@ -1,5 +1,6 @@
 package net.mcsquared.plugins.common.util;
 
+import net.mcsquared.plugins.common.Gamer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -117,6 +118,8 @@ public class SetupScoreboards extends JavaPlugin implements Listener {
     public void showPreScore(String time) {
   }
 
+
+
     public void Lobby() {
         showPreScore("ptime");
         ptime--;
@@ -196,7 +199,11 @@ public class SetupScoreboards extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
-                          event.getPlayer().setScoreboard(board);
+        Gamer gamer = Gamers.getGamer(event.getPlayer());
+
+
+
+        event.getPlayer().setScoreboard(board);
         event.getPlayer().sendMessage(ChatColor.GREEN + " Welcome to " + ChatColor.DARK_AQUA + "" + ChatColor.ITALIC + "Man Hunt");
         Player player = event.getPlayer();
         spectators.addPlayer(player);
