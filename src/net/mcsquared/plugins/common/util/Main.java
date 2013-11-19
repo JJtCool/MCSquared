@@ -15,15 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Main extends JavaPlugin implements Listener {
 
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        Gamer gamer = Gamers.getGamer(event.getEntity().getPlayer());
 
-        gamer.onDeath();
 
-        Gamer killer = Gamers.getGamer(event.getEntity().getKiller() );
 
-        killer.onKill();
-    }
 
 }

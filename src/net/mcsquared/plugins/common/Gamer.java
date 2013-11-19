@@ -9,12 +9,14 @@ import java.util.HashMap;
 public class Gamer {
     int kills = 0;
     int deaths = 0;
+    int online = 0;
     int kd = 0;
 
 
 
 
-
+    public void onlineGamer() {}
+    online= 1;
 
 
     public void onKill() {
